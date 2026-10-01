@@ -79,6 +79,22 @@ def _constrained_dynamic_shape(lower: int, upper: int) -> torch.Size:
     return dynamic_rows.meta["val"].shape
 
 
+def _unbounded_dynamic_shape() -> torch.Size:
+    class _UnboundedDynamicRows(torch.nn.Module):
+        def forward(self, x):
+            return torch.ops.torchtrt_profile_test.dynamic_rows(x)
+
+    exported = torch.export.export(
+        _UnboundedDynamicRows(), (torch.ones(4, 4),)
+    )
+    dynamic_rows = next(
+        node
+        for node in exported.graph.nodes
+        if node.target == torch.ops.torchtrt_profile_test.dynamic_rows.default
+    )
+    return dynamic_rows.meta["val"].shape
+
+
 @pytest.mark.unit
 def test_extract_var_range_info_fills_unbounded_max_from_user():
     """User bounds must fill the gap when the exporter's upper is ``int_oo``,
@@ -610,6 +626,21 @@ def test_construct_dynamic_input_uses_profile_midpoint():
     assert input_spec.shape["min_shape"] == (1000, 4)
     assert input_spec.shape["opt_shape"] == (1100, 4)
     assert input_spec.shape["max_shape"] == (1200, 4)
+
+
+@pytest.mark.unit
+def test_construct_dynamic_input_unbounded_zero_minimum():
+    symbolic_shape = _unbounded_dynamic_shape()
+    range_info = extract_var_range_info(symbolic_shape[0])
+    input_spec = construct_dynamic_input(
+        symbolic_shape, torch.float32, name="dynamic_rows"
+    )
+
+    assert range_info["min"] == 0
+    assert range_info["max"] is None
+    assert input_spec.shape["min_shape"] == (0, 4)
+    assert input_spec.shape["opt_shape"] == (2048, 4)
+    assert input_spec.shape["max_shape"] == (4096, 4)
 
 
 @pytest.mark.unit
