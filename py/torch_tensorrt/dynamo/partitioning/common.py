@@ -128,10 +128,11 @@ def construct_dynamic_input(
                 unwrapped_min_max_opt["min"] = min_bound
 
             if "max" not in min_max_opt or min_max_opt["max"] is None:
+                fallback_base = max(unwrapped_min_max_opt["min"], 1)
                 logger.warning(
-                    f"Dynamic input {name} (shape: {input_shape}) has no max bound for dim {d}, attempting to use a sane default (max: min({unwrapped_min_max_opt['min']}) * 2^12). Please set an upper bound using torch._dynamo.mark_dynamic or torch.export.Dim"
+                    f"Dynamic input {name} (shape: {input_shape}) has no max bound for dim {d}, attempting to use a sane default (max: max(min({unwrapped_min_max_opt['min']}), 1) * 2^12). Please set an upper bound using torch._dynamo.mark_dynamic or torch.export.Dim"
                 )
-                unwrapped_min_max_opt["max"] = unwrapped_min_max_opt["min"] * (2**12)
+                unwrapped_min_max_opt["max"] = fallback_base * (2**12)
             else:
                 unwrapped_min_max_opt["max"] = min_max_opt["max"]
 
