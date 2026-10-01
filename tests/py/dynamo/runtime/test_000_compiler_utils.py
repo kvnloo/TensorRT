@@ -130,6 +130,13 @@ class TestPrepareInputs(unittest.TestCase):
         self.assertEqual(result[0].shape, original.shape)
         self.assertEqual(result[0].dtype, original.dtype)
 
+    def test_prepare_invalid_input_error_lists_scalars(self):
+        with self.assertRaisesRegex(
+            ValueError,
+            r"Allowed input types: .*int, float, bool",
+        ):
+            prepare_inputs(object())
+
     def test_prepare_scalar_inputs(self):
         """Verify that scalar inputs are still converted to tensors."""
         int_result = prepare_inputs(42)

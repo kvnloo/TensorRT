@@ -284,7 +284,7 @@ def set_log_level(parent_logger: Any, level: Any) -> None:
 
 
 def prepare_inputs(
-    inputs: Input | torch.Tensor | Sequence[Any] | Dict[Any, Any],
+    inputs: Input | torch.Tensor | int | float | bool | Sequence[Any] | Dict[Any, Any],
     disable_memory_format_check: bool = False,
 ) -> Any:
     """
@@ -357,12 +357,12 @@ def prepare_inputs(
         else:
             raise ValueError(
                 f"Invalid input type {type(inputs)} encountered in the dynamo_compile input parsing. "
-                + "Allowed input types: {torch_tensorrt.Input, torch.Tensor, list, tuple, dict}"
+                + "Allowed input types: {torch_tensorrt.Input, torch.Tensor, int, float, bool, list, tuple, dict}"
             )
 
 
 def parse_complex_tensor_structs(
-    inputs: Input | torch.Tensor | Sequence[Any] | Dict[Any, Any],
+    inputs: Input | torch.Tensor | int | float | bool | Sequence[Any] | Dict[Any, Any],
     attribute_to_extract: str,
     apply_fn: Callable[[Any], Any] = lambda x: x,
 ) -> Any:
@@ -405,7 +405,7 @@ def parse_complex_tensor_structs(
     else:
         raise ValueError(
             f"Invalid input type {type(inputs)} encountered during Dynamo input parsing. "
-            + "Allowed input types: {torch_tensorrt.Input, torch.Tensor, list, tuple, dict}"
+            + "Allowed input types: {torch_tensorrt.Input, torch.Tensor, int, float, bool, list, tuple, dict}"
         )
 
 
