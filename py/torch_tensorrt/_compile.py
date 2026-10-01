@@ -241,7 +241,11 @@ def compile(
                     torch.randn((1, 3, 224, 244)) # Use an example tensor and let torch_tensorrt infer settings
                 ]
         arg_inputs (Tuple[Any, ...]): Same as inputs. Alias for better understanding with kwarg_inputs.
-        kwarg_inputs (dict[Any, ...]): Optional, kwarg inputs to the module forward function.
+        kwarg_inputs (dict[str, Any]): Optional keyword inputs to the module
+            forward function. Supported sample values are torch_tensorrt.Input,
+            torch.Tensor, Python int/float/bool scalars, and nested
+            lists/tuples/dicts composed of those values. Arbitrary Python objects
+            are not accepted by Dynamo input preparation.
         enabled_precision (Set(Union(torch.dtype, torch_tensorrt.dtype))): The set of datatypes that TensorRT can use when selecting kernels
         ir (str): The requested strategy to compile. (Options: default - Let Torch-TensorRT decide, ts - TorchScript with scripting path)
         **kwargs: Additional settings for the specific requested strategy (See submodules for more info)
@@ -364,7 +368,7 @@ def cross_compile_for_windows(
     file_path: str,
     inputs: Optional[Sequence[Input | torch.Tensor]] = None,
     arg_inputs: Optional[Sequence[Sequence[Any]]] = None,
-    kwarg_inputs: Optional[dict[Any, Any]] = None,
+    kwarg_inputs: Optional[dict[str, Any]] = None,
     enabled_precisions: Optional[Set[Union[torch.dtype, dtype]]] = None,
     **kwargs: Any,
 ) -> None:
@@ -398,7 +402,11 @@ def cross_compile_for_windows(
                     torch.randn((1, 3, 224, 244)) # Use an example tensor and let torch_tensorrt infer settings
                 ]
         arg_inputs (Tuple[Any, ...]): Same as inputs. Alias for better understanding with kwarg_inputs.
-        kwarg_inputs (dict[Any, ...]): Optional, kwarg inputs to the module forward function.
+        kwarg_inputs (dict[str, Any]): Optional keyword inputs to the module
+            forward function. Supported sample values are torch_tensorrt.Input,
+            torch.Tensor, Python int/float/bool scalars, and nested
+            lists/tuples/dicts composed of those values. Arbitrary Python objects
+            are not accepted by Dynamo input preparation.
         enabled_precision (Set(Union(torch.dtype, torch_tensorrt.dtype))): The set of datatypes that TensorRT can use when selecting kernels
         **kwargs: Additional settings for the specific requested strategy (See submodules for more info)
 
@@ -472,7 +480,7 @@ def convert_method_to_trt_engine(
     method_name: str = "forward",
     inputs: Optional[Sequence[Input | torch.Tensor]] = None,
     arg_inputs: Optional[Sequence[Sequence[Any]]] = None,
-    kwarg_inputs: Optional[dict[Any, Any]] = None,
+    kwarg_inputs: Optional[dict[str, Any]] = None,
     ir: str = "default",
     enabled_precisions: Optional[Set[Union[torch.dtype, dtype]]] = None,
     **kwargs: Any,
@@ -502,7 +510,11 @@ def convert_method_to_trt_engine(
                 ]
 
         arg_inputs (Tuple[Any, ...]): Same as inputs. Alias for better understanding with kwarg_inputs.
-        kwarg_inputs (dict[Any, ...]): Optional, kwarg inputs to the module forward function.
+        kwarg_inputs (dict[str, Any]): Optional keyword inputs to the module
+            forward function. Supported sample values are torch_tensorrt.Input,
+            torch.Tensor, Python int/float/bool scalars, and nested
+            lists/tuples/dicts composed of those values. Arbitrary Python objects
+            are not accepted by Dynamo input preparation.
         enabled_precision (Set(Union(torch.dtype, torch_tensorrt.dtype))): The set of datatypes that TensorRT can use when selecting kernels
         ir (str): The requested strategy to compile. (Options: default - Let Torch-TensorRT decide, ts - TorchScript with scripting path)
         **kwargs: Additional settings for the specific requested strategy (See submodules for more info)

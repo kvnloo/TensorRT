@@ -81,7 +81,7 @@ def cross_compile_for_windows(
     inputs: Optional[Sequence[Sequence[Any]]] = None,
     *,
     arg_inputs: Optional[Sequence[Sequence[Any]]] = None,
-    kwarg_inputs: Optional[dict[Any, Any]] = None,
+    kwarg_inputs: Optional[dict[str, Any]] = None,
     device: Optional[Union[Device, torch.device, str]] = _defaults.DEVICE,
     disable_tf32: bool = _defaults.DISABLE_TF32,
     assume_dynamic_shape_support: bool = _defaults.ASSUME_DYNAMIC_SHAPE_SUPPORT,
@@ -161,7 +161,11 @@ def cross_compile_for_windows(
 
     Keyword Arguments:
         arg_inputs (Tuple[Any, ...]): Same as inputs. Alias for better understanding with kwarg_inputs.
-        kwarg_inputs (dict[Any, ...]): Optional, kwarg inputs to the module forward function.
+        kwarg_inputs (dict[str, Any]): Optional keyword inputs to the module
+            forward function. Supported sample values are torch_tensorrt.Input,
+            torch.Tensor, Python int/float/bool scalars, and nested
+            lists/tuples/dicts composed of those values. Arbitrary Python objects
+            are not accepted by Dynamo input preparation.
         device (Union(torch_tensorrt.Device, torch.device, dict)): Target device for TensorRT engines to run on ::
 
             device=torch_tensorrt.Device("dla:1", allow_gpu_fallback=True)
@@ -449,7 +453,7 @@ def compile(
     inputs: Optional[Sequence[Sequence[Any]]] = None,
     *,
     arg_inputs: Optional[Sequence[Sequence[Any]]] = None,
-    kwarg_inputs: Optional[dict[Any, Any]] = None,
+    kwarg_inputs: Optional[dict[str, Any]] = None,
     device: Optional[Union[Device, torch.device, str]] = _defaults.DEVICE,
     disable_tf32: bool = _defaults.DISABLE_TF32,
     assume_dynamic_shape_support: bool = _defaults.ASSUME_DYNAMIC_SHAPE_SUPPORT,
@@ -547,7 +551,11 @@ def compile(
 
     Keyword Arguments:
         arg_inputs (Optional[Sequence[Sequence[Any]]]): Same as inputs. Alias for better understanding with kwarg_inputs.
-        kwarg_inputs (Optional[dict[Any, Any]]): kwarg inputs to the module forward function.
+        kwarg_inputs (Optional[dict[str, Any]]): Optional keyword inputs to the
+            module forward function. Supported sample values are
+            torch_tensorrt.Input, torch.Tensor, Python int/float/bool scalars,
+            and nested lists/tuples/dicts composed of those values. Arbitrary
+            Python objects are not accepted by Dynamo input preparation.
         device (Union(torch_tensorrt.Device, torch.device, dict)): Target device for TensorRT engines to run on ::
 
             device=torch_tensorrt.Device("dla:1", allow_gpu_fallback=True)
@@ -1861,7 +1869,7 @@ def convert_exported_program_to_serialized_trt_engine(
     inputs: Optional[Sequence[Sequence[Any]]] = None,
     *,
     arg_inputs: Optional[Sequence[Sequence[Any]]] = None,
-    kwarg_inputs: Optional[dict[Any, Any]] = None,
+    kwarg_inputs: Optional[dict[str, Any]] = None,
     device: Optional[Union[Device, torch.device, str]] = _defaults.DEVICE,
     disable_tf32: bool = _defaults.DISABLE_TF32,
     assume_dynamic_shape_support: bool = _defaults.ASSUME_DYNAMIC_SHAPE_SUPPORT,
@@ -1963,7 +1971,11 @@ def convert_exported_program_to_serialized_trt_engine(
 
     Keyword Arguments:
         arg_inputs (Optional[Sequence[Sequence[Any]]]): Same as inputs. Alias for better understanding with kwarg_inputs.
-        kwarg_inputs (Optional[dict[Any, Any]]): kwarg inputs to the module forward function.
+        kwarg_inputs (Optional[dict[str, Any]]): Optional keyword inputs to the
+            module forward function. Supported sample values are
+            torch_tensorrt.Input, torch.Tensor, Python int/float/bool scalars,
+            and nested lists/tuples/dicts composed of those values. Arbitrary
+            Python objects are not accepted by Dynamo input preparation.
         device (Union(torch_tensorrt.Device, torch.device, dict)): Target device for TensorRT engines to run on ::
 
             device=torch_tensorrt.Device("dla:1", allow_gpu_fallback=True)

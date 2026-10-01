@@ -27,7 +27,7 @@ def trace(
     inputs: Optional[Tuple[Any, ...]] = None,
     *,
     arg_inputs: Optional[Tuple[Any, ...]] = None,
-    kwarg_inputs: Optional[dict[Any, Any]] = None,
+    kwarg_inputs: Optional[dict[str, Any]] = None,
     **kwargs: Any,
 ) -> torch.export.ExportedProgram:
     """Exports a ``torch.export.ExportedProgram`` from a ``torch.nn.Module`` or ``torch.fx.GraphModule`` specifically targeting being compiled with Torch-TensorRT
@@ -54,7 +54,11 @@ def trace(
                 ]
     Keyword Arguments:
         arg_inputs (Tuple[Any, ...]): Same as inputs. Alias for better understanding with kwarg_inputs.
-        kwarg_inputs (dict[Any, ...]): Optional, kwarg inputs to the module forward function.
+        kwarg_inputs (dict[str, Any]): Optional keyword inputs to the module
+            forward function. Supported sample values are torch_tensorrt.Input,
+            torch.Tensor, Python int/float/bool scalars, and nested
+            lists/tuples/dicts composed of those values. Arbitrary Python objects
+            are not accepted by Dynamo input preparation.
         device (Union(torch.device, dict)): Target device for TensorRT engines to run on ::
 
             device=torch.device("cuda:0")
